@@ -25,11 +25,17 @@ effect yield
 
 // not sure why `f` needs to be `console`
 fun to-iter(f: () -> <yield,console|e> ()): <console|e> iterator
-    var res: () -> <console> int := fn () { println("not bound"); 0 }
+    var res := ref(fn ()
+        println("message 1")
+        0
+    )
     (handler {
         ctl yield(j) {
-            println(j)
-            res := fun () { resume(()) }
+            println(j);
+            return ref(fn ()
+                println("going to resume")
+                resume(())
+            )
             ()
         }
     }){ f() } 
